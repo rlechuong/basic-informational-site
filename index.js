@@ -1,45 +1,28 @@
 const http = require("node:http");
 const fs = require("node:fs");
 
+function serveFile(filePath, statusCode, res) {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    res.writeHead(statusCode, { "Content-Type": "text/html" });
+    res.end(data);
+  });
+}
+
 const server = http.createServer((req, res) => {
   const url = req.url;
 
   if (url === "/") {
-    fs.readFile("./index.html", "utf8", (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(data);
-    });
+    serveFile("./index.html", 200, res);
   } else if (url === "/about") {
-    fs.readFile("./about.html", "utf8", (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(data);
-    });
+    serveFile("./about.html", 200, res);
   } else if (url === "/contact-me") {
-    fs.readFile("./contact-me.html", "utf8", (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(data);
-    });
+    serveFile("./contact-me.html", 200, res);
   } else {
-    fs.readFile("./404.html", "utf8", (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      res.writeHead(404, { "Content-Type": "text/html" });
-      res.end(data);
-    });
+    serveFile("./404.html", 404, res);
   }
 });
 
